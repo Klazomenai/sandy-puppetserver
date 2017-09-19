@@ -1,0 +1,61 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: puppet
+  labels:
+    run: puppet
+  namespace: default
+  generation: 1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: puppet
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        run: puppet
+    spec:
+      containers:
+      - name: puppet
+        image: registry:5000/puppetserver:latest
+        ports:
+        - containerPort: 8140
+          hostPort: 8140
+          protocol: TCP
+        resources:
+          requests:
+            memory: "3072Mi"
+      hostname: puppet
+      #subdomain: local-dev
+      #dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      #securityContext: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: puppet
+  labels:
+    run: puppet
+  namespace: default
+spec:
+  # Static IP as DNS bugs in minikube, quick and dirty
+  # links to hardcoded hostname entries in Dockerfile
+  clusterIP: 10.0.0.200
+  type: ClusterIP
+  ports:
+  - port: 8140
+    targetPort: 8140
+    protocol: TCP
+  selector:
+    run: puppet
+#  sessionAffinity: None
+#status:
+#  loadBalancer: {}

@@ -1,0 +1,5 @@
+# Stuff not in the open just yet
+puppet-modules
+puppet-nodes-hiera
+etc/puppet/environments/
+etc/puppet/hieradata/

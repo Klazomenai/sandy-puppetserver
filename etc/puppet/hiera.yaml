@@ -1,0 +1,14 @@
+---
+:backends:
+  - yaml
+
+:hierarchy:
+  - 'environment/%{::environment}/hostname/%{::hostname}'
+  - 'environment/%{::environment}/nodetype/%{::nodetype}'
+  - 'nodetype/%{::nodetype}'
+  - 'environment/%{::environment}/global'
+  - 'environment/%{::environment}/hosts'
+  - global
+
+:yaml:
+  :datadir: '/etc/puppet/hieradata/'
